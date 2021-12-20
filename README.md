@@ -60,4 +60,4 @@ exports.validate = {
 
 ## 使用方法
 
-- `ctx.validate(descriptor[, data])` data默认 ctx.request.body
+- `await ctx.validate(descriptor[, data])` data默认 ctx.request.body
