@@ -4,7 +4,11 @@ const Schema = require('async-validator').default;
 const convertMap = {
   string: String,
   number: Number,
-  boolean: Boolean,
+  boolean: value => {
+    if (['false', 'null', '0', 'undefined', 'NaN'].includes(value)) return false;
+
+    return Boolean(value);
+  },
   // method: Must be of type function.
   regexp: value => new RegExp(value),
   integer: parseInt,
@@ -35,7 +39,7 @@ module.exports = {
     data = data || this.request.body;
 
     // 基于type进行类型转换，只转换对象第一层属性
-    if (convert && typeof data === 'object') {
+    if (typeof data === 'object') {
       // 进行浅拷贝，防止修改原始对象
       data = { ...data };
       Object.entries(descriptor).forEach(([key, rule]) => {
@@ -45,7 +49,10 @@ module.exports = {
         const parser = convertMap[type];
         const value = data[key];
 
-        if (value !== undefined && parser) data[key] = parser(value);
+        const convertRecord = rules.find(item => item.convert !== undefined);
+        const _convert = convertRecord ? convertRecord.convert : convert;
+
+        if (_convert && value !== undefined && parser) data[key] = parser(value);
       });
     }
 
