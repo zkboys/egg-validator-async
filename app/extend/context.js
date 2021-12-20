@@ -36,6 +36,8 @@ module.exports = {
 
     // 基于type进行类型转换，只转换对象第一层属性
     if (convert && typeof data === 'object') {
+      // 进行浅拷贝，防止修改原始对象
+      data = { ...data };
       Object.entries(descriptor).forEach(([key, rule]) => {
         const rules = Array.isArray(rule) ? rule : [rule];
         const record = rules.find(item => !!item.type);
