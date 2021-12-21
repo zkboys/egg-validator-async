@@ -1,5 +1,23 @@
 'use strict';
 const Schema = require('async-validator').default;
+const asyncValidatorTypes = [
+    'string',
+    'number',
+    'boolean',
+    'method',
+    'regexp',
+    'integer',
+    'float',
+    'array',
+    'object',
+    'enum',
+    'date',
+    'url',
+    'hex',
+    'email',
+    'pattern',
+    'any',
+];
 
 const convertMap = {
     string: String,
@@ -50,10 +68,17 @@ module.exports = {
                 } else {
                     required = true;
                 }
-                rules = [{
-                    type,
-                    required,
-                }];
+                if (asyncValidatorTypes.includes(type)) {
+                    rules = [{
+                        type,
+                        required,
+                    }];
+                } else {
+                    rules = [
+                        {required},
+                        {type},
+                    ];
+                }
             }
             return {
                 ...prev,
@@ -102,6 +127,8 @@ module.exports = {
                 }
             });
         });
+
+        // console.log(descriptor);
 
         const validator = new Schema(descriptor);
 
