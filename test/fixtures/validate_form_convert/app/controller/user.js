@@ -1,11 +1,18 @@
 'use strict';
 
 const createRule = {
-  username: 'string',
-  age: 'int',
+    username: {
+        type: 'string',
+        required: true,
+    },
+    age: {
+        type: 'number',
+        required: true,
+    },
 };
 
-exports.create = function* () {
-  this.validate(createRule);
-  this.body = this.request.body;
+exports.create = async function() {
+    await this.validate(createRule);
+
+    this.body = this.request.body;
 };

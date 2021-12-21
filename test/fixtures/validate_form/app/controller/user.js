@@ -1,20 +1,17 @@
 'use strict';
 
 const createRule = {
-  username: {
-    type: 'email',
-  },
-  password: {
-    type: 'password',
-    compare: 're-password'
-  },
-  addition: {
-    required: false,
-    type: 'json'
-  },
+    username: {
+        type: 'email',
+        required: true,
+    },
+    password: {
+        type: 'string',
+        required: true,
+    },
 };
 
-exports.create = function* () {
-  this.validate(createRule);
-  this.body = this.request.body;
+exports.create = async function() {
+    await this.validate(createRule);
+    this.body = this.request.body;
 };
