@@ -58,7 +58,18 @@ module.exports = {
 
         const validator = new Schema(descriptor);
 
-        await validator.validate(data);
+        try {
+            await validator.validate(data);
+        } catch (error) {
+            // 标记校验的数据源
+            // ctx.headers ctx.params ctx.query ctx.request.body
+            if (data === this.headers) error.dataSource = 'headers';
+            if (data === this.params) error.dataSource = 'params';
+            if (data === this.query) error.dataSource = 'query';
+            if (data === this.request.body) error.dataSource = 'body';
+
+            throw error;
+        }
 
         return data;
     },
