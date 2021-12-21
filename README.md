@@ -1,9 +1,7 @@
 # egg-validator-async
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
@@ -11,17 +9,9 @@
 
 [npm-url]: https://npmjs.org/package/egg-validator-async
 
-[travis-image]: https://img.shields.io/travis/zkboys/egg-validator-async.svg?style=flat-square
-
-[travis-url]: https://app.travis-ci.com/zkboys/egg-validator-async.svg?branch=master
-
 [codecov-image]: https://img.shields.io/codecov/c/github/zkboys/egg-validator-async.svg?style=flat-square
 
 [codecov-url]: https://codecov.io/github/zkboys/egg-validator-async?branch=master
-
-[david-image]: https://img.shields.io/david/zkboys/egg-validator-async.svg?style=flat-square
-
-[david-url]: https://david-dm.org/zkboys/egg-validator-async
 
 [snyk-image]: https://snyk.io/test/npm/egg-validator-async/badge.svg?style=flat-square
 
@@ -44,8 +34,8 @@ $ npm i egg-validator-async --save
 ```js
 // config/plugin.js
 exports.validate = {
-  enable: true,
-  package: 'egg-validator-async',
+    enable: true,
+    package: 'egg-validator-async',
 };
 ```
 
@@ -54,7 +44,7 @@ egg-validator-async 支持 async-validator 的所有配置项，查看 [async-va
 ```js
 // config/config.default.js
 exports.validate = {
-  // convert: false,
+    // convert: false,
 };
 ```
 
