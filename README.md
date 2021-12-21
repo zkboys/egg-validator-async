@@ -11,17 +11,17 @@
 
 [npm-url]: https://npmjs.org/package/egg-validator-async
 
-[travis-image]: https://img.shields.io/travis/eggjs/egg-validator-async.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/zkboys/egg-validator-async.svg?style=flat-square
 
-[travis-url]: https://travis-ci.org/eggjs/egg-validator-async
+[travis-url]: https://travis-ci.org/zkboys/egg-validator-async
 
-[codecov-image]: https://img.shields.io/codecov/c/github/eggjs/egg-validator-async.svg?style=flat-square
+[codecov-image]: https://img.shields.io/codecov/c/github/zkboys/egg-validator-async.svg?style=flat-square
 
-[codecov-url]: https://codecov.io/github/eggjs/egg-validator-async?branch=master
+[codecov-url]: https://codecov.io/github/zkboys/egg-validator-async?branch=master
 
-[david-image]: https://img.shields.io/david/eggjs/egg-validator-async.svg?style=flat-square
+[david-image]: https://img.shields.io/david/zkboys/egg-validator-async.svg?style=flat-square
 
-[david-url]: https://david-dm.org/eggjs/egg-validator-async
+[david-url]: https://david-dm.org/zkboys/egg-validator-async
 
 [snyk-image]: https://snyk.io/test/npm/egg-validator-async/badge.svg?style=flat-square
 
