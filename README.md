@@ -51,3 +51,20 @@ exports.validate = {
 ## 使用方法
 
 - `await ctx.validate(descriptor[, data])` data默认 ctx.request.body
+- `app.validator.addRule(type, customerRule)` `app.validator.addRules({type: rule, type2: rule2})` 可以添加自定义校验type
+- 规则写法：
+
+```javascript
+const descriptor = {
+    name: {required: true, message: '姓名必填！'},
+    age: [
+        {required: true, message: '年龄必填！'},
+        {type: 'number', message: '年龄必须是数字'},
+    ],
+    enabled: {type: 'boolean', message: '必须是boolean值'},
+    mobile: {type: 'mobile'}, // 会转为 {...customerRule}
+    mobile2: 'mobile?', // 自定义type 会转为 {...customerRule, required: false}
+    job: 'string', // 会转为 {type: string, required: true}
+    position: 'string?', // 会转为 {type: string, required: false}
+}
+```

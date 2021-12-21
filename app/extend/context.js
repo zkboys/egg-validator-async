@@ -37,6 +37,30 @@ module.exports = {
         if (convert === undefined) convert = this.app.config.validate.convert;
 
         data = data || this.request.body;
+        descriptor = Object.entries(descriptor).reduce((prev, curr) => {
+            const [field, rule] = curr;
+            let rules = rule;
+
+            if (typeof rule === 'string') {
+                let type = rule;
+                let required;
+                if (rule.endsWith('?')) {
+                    required = false;
+                    type = rule.replace('?', '');
+                } else {
+                    required = true;
+                }
+                rules = [{
+                    type,
+                    required,
+                }];
+            }
+            return {
+                ...prev,
+                [field]: rules,
+            };
+        }, {});
+
 
         // 基于type进行类型转换，只转换对象第一层属性
         if (typeof data === 'object') {
@@ -55,6 +79,31 @@ module.exports = {
                 if (_convert && value !== undefined && parser) data[key] = parser(value);
             });
         }
+
+        // 处理用户自定义规则
+        const customerRules = this.app.validator.rules || {};
+
+        Object.entries(descriptor).forEach(([field, rule]) => {
+            const rules = Array.isArray(rule) ? rule : [rule];
+            descriptor[field] = rules;
+            rules.forEach(item => {
+                const {type} = item;
+                const customerRule = customerRules[type];
+                if (customerRule) {
+                    const customerType = customerRule.type || 'string';
+                    item.message = item.message || customerType.message;
+
+                    Object.entries(customerRule)
+                        .forEach(([k, v]) => {
+                            item[k] = v;
+                        });
+
+                    item.type = customerType;
+                }
+            });
+        });
+
+        console.log(descriptor);
 
         const validator = new Schema(descriptor);
 

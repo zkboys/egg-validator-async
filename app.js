@@ -1,8 +1,64 @@
 'use strict';
 
 // const Parameter = require('parameter');
+const {default: Schema} = require('async-validator');
+const asyncValidatorTypes = [
+    'string',
+    'number',
+    'boolean',
+    'method',
+    'regexp',
+    'integer',
+    'float',
+    'array',
+    'object',
+    'enum',
+    'date',
+    'url',
+    'hex',
+    'email',
+    'pattern',
+    'any',
+];
 
-module.exports = (/* app */) => {
-  // 可以在app实例上添加属性
-  // app.validator = new Parameter(app.config.validate);
+/**
+ * 检测类型是否与async-validator或已有类型重复
+ * @param type  类型
+ * @param rules  类型对应的规则
+ */
+function checkType(type, rules = {}) {
+    const types = Object.keys(rules).concat(asyncValidatorTypes);
+
+    if (types.includes(type)) throw Error(`type: ${type} is already in use!`);
+}
+
+class Validator {
+    constructor(rules = {}) {
+        Object.keys(rules).forEach(type => checkType(type));
+
+        this.rules = rules;
+    }
+
+    addRule(type, rule) {
+        checkType(type, this.rules);
+        this.rules[type] = rule;
+    }
+
+    addRules(rules = {}) {
+        Object.keys(rules).forEach(type => checkType(type));
+        Object.entries(rules).forEach(([key, value]) => {
+            this.rules[key] = value;
+        });
+    }
+
+    async validate(descriptor, data) {
+        const validator = new Schema(descriptor);
+
+        await validator.validate(data);
+    }
+}
+
+module.exports = app => {
+    // 可以在app实例上添加属性
+    app.validator = new Validator();
 };
