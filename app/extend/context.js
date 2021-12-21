@@ -115,15 +115,14 @@ module.exports = {
                 const {type} = item;
                 const customerRule = customerRules[type];
                 if (customerRule) {
-                    const customerType = customerRule.type || 'string';
-                    item.message = item.message || customerType.message;
+                    item.message = item.message || customerRule.message;
+                    item.type = customerRule.type || 'string';
 
                     Object.entries(customerRule)
                         .forEach(([k, v]) => {
+                            if (['message', 'type'].includes(k)) return;
                             item[k] = v;
                         });
-
-                    item.type = customerType;
                 }
             });
         });
