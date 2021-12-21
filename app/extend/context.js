@@ -103,8 +103,6 @@ module.exports = {
             });
         });
 
-        console.log(descriptor);
-
         const validator = new Schema(descriptor);
 
         try {
