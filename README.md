@@ -13,7 +13,7 @@
 
 [travis-image]: https://img.shields.io/travis/zkboys/egg-validator-async.svg?style=flat-square
 
-[travis-url]: https://travis-ci.com/zkboys/egg-validator-async
+[travis-url]: https://app.travis-ci.com/zkboys/egg-validator-async.svg?branch=master
 
 [codecov-image]: https://img.shields.io/codecov/c/github/zkboys/egg-validator-async.svg?style=flat-square
 
