@@ -8,7 +8,7 @@ declare module 'egg' {
     export interface Application {
         validator: {
             addRule: (type: string, rule: any) => any;
-            addRules: (type: string, rules: any) => any;
+            addRules: (rules: any) => any;
         };
     }
 }
