@@ -2,29 +2,12 @@
 
 // const Parameter = require('parameter');
 const {default: Schema} = require('async-validator');
-const asyncValidatorTypes = [
-    'string',
-    'number',
-    'boolean',
-    'method',
-    'regexp',
-    'integer',
-    'float',
-    'array',
-    'object',
-    'enum',
-    'date',
-    'url',
-    'hex',
-    'email',
-    'pattern',
-    'any',
-];
+const asyncValidatorTypes = Object.keys(Schema.validators);
 
 /**
  * 检测类型是否与async-validator或已有类型重复
- * @param type  类型
- * @param rules  类型对应的规则
+ * @param {string} type  类型
+ * @param {object} rules  类型对应的规则
  */
 function checkType(type, rules = {}) {
     const types = Object.keys(rules).concat(asyncValidatorTypes);

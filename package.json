@@ -1,6 +1,6 @@
 {
   "name": "egg-validator-async",
-  "version": "2.0.11",
+  "version": "2.0.13",
   "description": "validate plugin for egg",
   "eggPlugin": {
     "name": "validate"
