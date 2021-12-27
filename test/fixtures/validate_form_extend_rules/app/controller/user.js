@@ -11,6 +11,8 @@ const createRule = {
     message: '手机号错误！',
   },
   mobile3: 'mobile',
+  name: 'string',
+  job: 'string?',
 };
 
 exports.create = async function() {

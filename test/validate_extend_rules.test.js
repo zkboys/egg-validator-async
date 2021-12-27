@@ -31,10 +31,14 @@ describe('test/validate.test.js', () => {
           assert.deepEqual(res.body.errors, [
             { field: 'mobile', message: '请输入正确的手机号！', fieldValue: '123' },
             { field: 'mobile2', message: '手机号错误！', fieldValue: '123' },
+            { field: 'mobile3', message: '请输入正确的手机号！', fieldValue: '123' },
+            { field: 'name', message: 'name is required' },
           ]);
           assert.deepEqual(res.body.fields, {
             mobile: [{ message: '请输入正确的手机号！', field: 'mobile', fieldValue: '123' }],
             mobile2: [{ message: '手机号错误！', field: 'mobile2', fieldValue: '123' }],
+            mobile3: [{ message: '请输入正确的手机号！', field: 'mobile3', fieldValue: '123' }],
+            name: [{ message: 'name is required', field: 'name' }],
           });
         });
     });

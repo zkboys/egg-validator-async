@@ -112,6 +112,7 @@ function extendRules(userExtendRules, descriptor) {
 function simpleType(descriptor) {
   // 处理简写方式
   Object.entries(descriptor).forEach(([field, rules]) => {
+
     if (typeof rules === 'string') {
       let type = rules;
       let required;
@@ -124,6 +125,8 @@ function simpleType(descriptor) {
       }
 
       descriptor[field] = asyncValidatorTypes.includes(type) ? [{ type, required }] : [{ required }, { type }];
+
+      return;
     }
 
     descriptor[field] = Array.isArray(rules) ? rules : [rules];
