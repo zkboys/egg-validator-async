@@ -7,5 +7,10 @@ module.exports = function(app) {
       pattern: /^\d{11}$/,
       message: '请输入正确的手机号！',
     },
+    mobile2: {
+      type: 'string',
+      pattern: /^\d{11}$/,
+      message: '请输入正确的手机号！',
+    },
   });
 };

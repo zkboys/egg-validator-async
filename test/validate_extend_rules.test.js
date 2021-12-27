@@ -15,13 +15,20 @@ describe('test/validate.test.js', () => {
   after(() => app.close());
 
   describe('post', () => {
-    it('should all pass', () => {
+
+    it('should return invalid_param', () => {
       return app.httpRequest()
         .post('/users.json')
         .send({
           mobile: 123,
           mobile2: 123,
           mobile3: 123,
+          user: {
+            name: '张三',
+            mobile: 123,
+            mobile2: 123,
+            age: '12',
+          },
         })
         .type('json')
         .expect(500)
@@ -33,14 +40,65 @@ describe('test/validate.test.js', () => {
             { field: 'mobile2', message: '手机号错误！', fieldValue: '123' },
             { field: 'mobile3', message: '请输入正确的手机号！', fieldValue: '123' },
             { field: 'name', message: 'name is required' },
+            { field: 'user.mobile', message: 'user.mobile is not a string', fieldValue: 123 },
+            { field: 'user.mobile', message: '请输入正确的手机号！', fieldValue: 123 },
+            { field: 'user.mobile2', message: '请输入正确的手机号！', fieldValue: 123 },
+            { field: 'user.age', message: '年龄必填！', fieldValue: '12' },
           ]);
           assert.deepEqual(res.body.fields, {
             mobile: [{ message: '请输入正确的手机号！', field: 'mobile', fieldValue: '123' }],
             mobile2: [{ message: '手机号错误！', field: 'mobile2', fieldValue: '123' }],
             mobile3: [{ message: '请输入正确的手机号！', field: 'mobile3', fieldValue: '123' }],
             name: [{ message: 'name is required', field: 'name' }],
+
+            'user.mobile': [
+              {
+                message: 'user.mobile is not a string',
+                fieldValue: 123,
+                field: 'user.mobile',
+              },
+              {
+                message: '请输入正确的手机号！',
+                fieldValue: 123,
+                field: 'user.mobile',
+              },
+            ],
+            'user.mobile2': [
+              {
+                message: '请输入正确的手机号！',
+                fieldValue: 123,
+                field: 'user.mobile2',
+              },
+            ],
+            'user.age': [
+              {
+                message: '年龄必填！',
+                fieldValue: '12',
+                field: 'user.age',
+              },
+            ],
           });
         });
+    });
+
+    it('should all pass', () => {
+      return app.httpRequest()
+        .post('/users.json')
+        .send({
+          mobile: 18611436666,
+          mobile2: 18611436666,
+          mobile3: 18611436666,
+          name: 123,
+          user: {
+            name: '张三',
+            mobile: '18611436666',
+            mobile2: '18611436666',
+            mobileNumber: 18611436666,
+            age: 12,
+          },
+        })
+        .type('json')
+        .expect(200);
     });
   });
 });

@@ -82,13 +82,14 @@ function extendRules(userExtendRules, descriptor) {
   Object.entries(descriptor).forEach(([field, rule]) => {
     const rules = Array.isArray(rule) ? rule : [rule];
     descriptor[field] = rules;
+
     rules.forEach(item => {
       const { type, fields } = item;
       const extendRule = userExtendRules[type];
 
       if (extendRule) {
         item.message = item.message || extendRule.message;
-        item.type = extendRule.type || 'string';
+        item.type = extendRule.type;
 
         Object.entries(extendRule)
           .forEach(([k, v]) => {
