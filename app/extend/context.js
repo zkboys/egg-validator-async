@@ -89,11 +89,10 @@ function extendRules(userExtendRules, descriptor) {
 
       if (extendRule) {
         item.message = item.message || extendRule.message;
-        item.type = extendRule.type;
 
         Object.entries(extendRule)
           .forEach(([k, v]) => {
-            if (['message', 'type'].includes(k)) return;
+            if (['message'].includes(k)) return;
             item[k] = v;
           });
       }
