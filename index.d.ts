@@ -32,6 +32,7 @@ declare module 'egg' {
             addRule: (type: string, rule: RuleItem) => void;
             addRules: (rules: Rules) => void;
             validate: (descriptor: Rules, data?: any) => Promise<any>;
+            rules: Rules,
         };
     }
 }
