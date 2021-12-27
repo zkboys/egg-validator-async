@@ -10,6 +10,7 @@ const createRule = {
     required: true,
     message: '手机号错误！',
   },
+  mobile3: 'mobile',
 };
 
 exports.create = async function() {

@@ -21,6 +21,7 @@ describe('test/validate.test.js', () => {
         .send({
           mobile: 123,
           mobile2: 123,
+          mobile3: 123,
         })
         .type('json')
         .expect(500)
