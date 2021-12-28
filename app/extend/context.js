@@ -42,6 +42,28 @@ const CONVERT_MAP = {
     // any: Can be any type.
 };
 
+
+/**
+ * 基于default进行赋值，只赋值对象第一层属性，副作用：改变原对象
+ * @param {object} descriptor 校验规则
+ * @param {object} data 需要校验的数据
+ */
+function setDefault(descriptor, data) {
+    // 基于type进行类型转换，只转换对象第一层属性
+    if (typeof data === 'object') {
+        Object.entries(descriptor).forEach(([key, rule]) => {
+            const rules = Array.isArray(rule) ? rule : [rule];
+            const record = rules.find(item => item.default !== undefined);
+
+            if (data[key] === undefined) {
+                data[key] = record ? record.default : undefined;
+            }
+        });
+    }
+
+    return data;
+}
+
 /**
  * 基于type进行类型转换，只转换对象第一层属性，副作用：改变原对象
  * @param {object} descriptor 校验规则
@@ -51,7 +73,6 @@ const CONVERT_MAP = {
 function convertObject(descriptor, data, convert) {
     // 基于type进行类型转换，只转换对象第一层属性
     if (typeof data === 'object') {
-        // data = { ...data }; // 进行浅拷贝，防止修改原始对象
         Object.entries(descriptor).forEach(([key, rule]) => {
             const rules = Array.isArray(rule) ? rule : [rule];
             const record = rules.find(item => !!item.type);
@@ -152,6 +173,9 @@ module.exports = {
 
             // 处理提示信息
             setMessage(descriptor);
+
+            // 处理默认值
+            setDefault(descriptor, data);
 
             const validator = new Schema(descriptor);
 
