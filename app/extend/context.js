@@ -1,6 +1,5 @@
 'use strict';
 const Schema = require('async-validator').default;
-const asyncValidatorTypes = Object.keys(Schema.validators);
 
 /**
  * 转换为number，如果转为NaN会报错
@@ -107,43 +106,6 @@ function extendRules(userExtendRules, descriptor) {
 }
 
 /**
- * 处理简写方式  name: 'string?'
- * @param {object} descriptor 校验规则
- */
-function simpleType(descriptor) {
-    // 处理简写方式
-    Object.entries(descriptor).forEach(([field, rules]) => {
-
-        if (typeof rules === 'string') {
-            let type = rules;
-            let required;
-
-            if (rules.endsWith('?')) {
-                required = false;
-                type = rules.replace('?', '');
-            } else {
-                required = true;
-            }
-
-            descriptor[field] = asyncValidatorTypes.includes(type) ? [{ type, required }] : [{ required }, { type }];
-
-            return;
-        }
-
-        descriptor[field] = Array.isArray(rules) ? rules : [rules];
-
-        descriptor[field].forEach(rule => {
-            const { fields } = rule;
-
-            // 深层处理
-            if (fields) {
-                simpleType(fields);
-            }
-        });
-    });
-}
-
-/**
  * 处理提示信息
  * @param {object} descriptor 校验规则
  */
@@ -182,9 +144,6 @@ module.exports = {
             // 默认校验body
             data = data || this.request.body;
 
-            // 处理简写方式
-            simpleType(descriptor);
-
             // 处理用户扩展规则
             extendRules(this.app.validator.rules, descriptor);
 
@@ -193,8 +152,6 @@ module.exports = {
 
             // 处理提示信息
             setMessage(descriptor);
-
-            console.log('descriptor======', descriptor);
 
             const validator = new Schema(descriptor);
 

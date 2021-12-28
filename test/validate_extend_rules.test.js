@@ -41,7 +41,6 @@ describe('test/validate.test.js', () => {
                         { field: 'mobile3', message: '请输入正确的手机号！', fieldValue: '123' },
                         { field: 'name', message: 'name is required' },
                         { field: 'phone', message: '手机号不允许为空！' },
-                        { field: 'user.mobile', message: 'user.mobile is not a string', fieldValue: 123 },
                         { field: 'user.mobile', message: '请输入正确的手机号！', fieldValue: 123 },
                         { field: 'user.mobile2', message: '请输入正确的手机号！', fieldValue: 123 },
                         { field: 'user.age', message: '年龄必填！', fieldValue: '12' },
@@ -54,11 +53,6 @@ describe('test/validate.test.js', () => {
                         phone: [{ message: '手机号不允许为空！', field: 'phone' }],
 
                         'user.mobile': [
-                            {
-                                message: 'user.mobile is not a string',
-                                fieldValue: 123,
-                                field: 'user.mobile',
-                            },
                             {
                                 message: '请输入正确的手机号！',
                                 fieldValue: 123,
