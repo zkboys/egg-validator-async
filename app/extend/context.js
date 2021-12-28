@@ -8,39 +8,39 @@ const asyncValidatorTypes = Object.keys(Schema.validators);
  * @return {(function(*=): (number))|*} 返回转换函数
  */
 const toNumber = type => value => {
-  if (typeof value === 'number') return value;
+    if (typeof value === 'number') return value;
 
-  if (!value) return value;
+    if (!value) return value;
 
-  const result = Number(value);
+    const result = Number(value);
 
-  if (isNaN(result)) throw Error(`${value} can not convert to ${type}!`);
+    if (isNaN(result)) throw Error(`${value} can not convert to ${type}!`);
 
-  return result;
+    return result;
 };
 
 const CONVERT_MAP = {
-  string: String,
-  number: toNumber('number'),
-  boolean: value => {
-    if (typeof value === 'boolean') return value;
+    string: String,
+    number: toNumber('number'),
+    boolean: value => {
+        if (typeof value === 'boolean') return value;
 
-    if (['false', 'null', '0', 'undefined', 'NaN'].includes(value)) return false;
+        if (['false', 'null', '0', 'undefined', 'NaN'].includes(value)) return false;
 
-    return Boolean(value);
-  },
-  // method: Must be of type function.
-  regexp: value => new RegExp(value),
-  integer: toNumber('integer'),
-  float: toNumber('float'),
-  // array: Must be an array as determined by Array.isArray.
-  // object: Must be of type object and not Array.isArray.
-  // enum: Value must exist in the enum.
-  // date: Value must be valid as determined by Date
-  // url: Must be of type url.
-  // hex: Must be of type hex.
-  // email: Must be of type email.
-  // any: Can be any type.
+        return Boolean(value);
+    },
+    // method: Must be of type function.
+    regexp: value => new RegExp(value),
+    integer: toNumber('integer'),
+    float: toNumber('float'),
+    // array: Must be an array as determined by Array.isArray.
+    // object: Must be of type object and not Array.isArray.
+    // enum: Value must exist in the enum.
+    // date: Value must be valid as determined by Date
+    // url: Must be of type url.
+    // hex: Must be of type hex.
+    // email: Must be of type email.
+    // any: Can be any type.
 };
 
 /**
@@ -50,24 +50,24 @@ const CONVERT_MAP = {
  * @param {boolean} convert 是否进行转换
  */
 function convertObject(descriptor, data, convert) {
-  // 基于type进行类型转换，只转换对象第一层属性
-  if (typeof data === 'object') {
-    // data = { ...data }; // 进行浅拷贝，防止修改原始对象
-    Object.entries(descriptor).forEach(([key, rule]) => {
-      const rules = Array.isArray(rule) ? rule : [rule];
-      const record = rules.find(item => !!item.type);
-      const type = record ? record.type : 'string';
-      const parser = CONVERT_MAP[type];
-      const value = data[key];
+    // 基于type进行类型转换，只转换对象第一层属性
+    if (typeof data === 'object') {
+        // data = { ...data }; // 进行浅拷贝，防止修改原始对象
+        Object.entries(descriptor).forEach(([key, rule]) => {
+            const rules = Array.isArray(rule) ? rule : [rule];
+            const record = rules.find(item => !!item.type);
+            const type = record ? record.type : 'string';
+            const parser = CONVERT_MAP[type];
+            const value = data[key];
 
-      const convertRecord = rules.find(item => item.convert !== undefined);
-      const _convert = convertRecord ? convertRecord.convert : convert;
+            const convertRecord = rules.find(item => item.convert !== undefined);
+            const _convert = convertRecord ? convertRecord.convert : convert;
 
-      if (_convert && value !== undefined && parser) data[key] = parser(value);
-    });
-  }
+            if (_convert && value !== undefined && parser) data[key] = parser(value);
+        });
+    }
 
-  return data;
+    return data;
 }
 
 /**
@@ -76,33 +76,34 @@ function convertObject(descriptor, data, convert) {
  * @param {object} descriptor 检验规则
  */
 function extendRules(userExtendRules, descriptor) {
-  // 不存在用户扩展规则，不处理
-  if (!userExtendRules) return;
+    // 不存在用户扩展规则，不处理
+    if (!userExtendRules) return;
 
-  Object.entries(descriptor).forEach(([field, rule]) => {
-    const rules = Array.isArray(rule) ? rule : [rule];
-    descriptor[field] = rules;
+    Object.entries(descriptor).forEach(([field, rule]) => {
+        const rules = Array.isArray(rule) ? rule : [rule];
+        descriptor[field] = rules;
 
-    rules.forEach(item => {
-      const { type, fields } = item;
-      const extendRule = userExtendRules[type];
+        rules.forEach(item => {
+            const { type, fields } = item;
+            const extendRule = userExtendRules[type];
 
-      if (extendRule) {
-        item.message = item.message || extendRule.message;
+            if (extendRule) {
+                item.message = item.message || extendRule.message;
+                item.type = extendRule.type;
 
-        Object.entries(extendRule)
-          .forEach(([k, v]) => {
-            if (['message'].includes(k)) return;
-            item[k] = v;
-          });
-      }
+                Object.entries(extendRule)
+                    .forEach(([k, v]) => {
+                        if (['message', 'type'].includes(k)) return;
+                        item[k] = v;
+                    });
+            }
 
-      // 深层处理
-      if (fields) {
-        extendRules(userExtendRules, fields);
-      }
+            // 深层处理
+            if (fields) {
+                extendRules(userExtendRules, fields);
+            }
+        });
     });
-  });
 }
 
 /**
@@ -110,79 +111,106 @@ function extendRules(userExtendRules, descriptor) {
  * @param {object} descriptor 校验规则
  */
 function simpleType(descriptor) {
-  // 处理简写方式
-  Object.entries(descriptor).forEach(([field, rules]) => {
+    // 处理简写方式
+    Object.entries(descriptor).forEach(([field, rules]) => {
 
-    if (typeof rules === 'string') {
-      let type = rules;
-      let required;
+        if (typeof rules === 'string') {
+            let type = rules;
+            let required;
 
-      if (rules.endsWith('?')) {
-        required = false;
-        type = rules.replace('?', '');
-      } else {
-        required = true;
-      }
+            if (rules.endsWith('?')) {
+                required = false;
+                type = rules.replace('?', '');
+            } else {
+                required = true;
+            }
 
-      descriptor[field] = asyncValidatorTypes.includes(type) ? [{ type, required }] : [{ required }, { type }];
+            descriptor[field] = asyncValidatorTypes.includes(type) ? [{ type, required }] : [{ required }, { type }];
 
-      return;
-    }
+            return;
+        }
 
-    descriptor[field] = Array.isArray(rules) ? rules : [rules];
+        descriptor[field] = Array.isArray(rules) ? rules : [rules];
 
-    descriptor[field].forEach(rule => {
-      const { fields } = rule;
+        descriptor[field].forEach(rule => {
+            const { fields } = rule;
 
-      // 深层处理
-      if (fields) {
-        simpleType(fields);
-      }
+            // 深层处理
+            if (fields) {
+                simpleType(fields);
+            }
+        });
     });
-  });
+}
+
+/**
+ * 处理提示信息
+ * @param {object} descriptor 校验规则
+ */
+function setMessage(descriptor) {
+    Object.entries(descriptor).forEach(([field, rules]) => {
+        descriptor[field] = Array.isArray(rules) ? rules : [rules];
+
+        descriptor[field].forEach(rule => {
+            const { fields, name, message, required } = rule;
+            if (name && !message && required) {
+                rule.message = `${name}不允许为空！`;
+            }
+
+            // 深层处理
+            if (fields) {
+                setMessage(fields);
+            }
+        });
+    });
 }
 
 module.exports = {
-  /**
-   * validate data with rules
-   *
-   * @param  {Object} descriptor  - validate rule object, see [async-validator](https://github.com/yiminghe/async-validator)
-   * @param  {Object} [data] - validate target, default to `this.request.body`
-   * @param  {Object} [options] - validate options
-   */
-  async validate(descriptor, data, options) {
-    try {
-      let convert = (options || {}).convert;
+    /**
+     * validate data with rules
+     *
+     * @param  {Object} descriptor  - validate rule object, see [async-validator](https://github.com/yiminghe/async-validator)
+     * @param  {Object} [data] - validate target, default to `this.request.body`
+     * @param  {Object} [options] - validate options
+     */
+    async validate(descriptor, data, options) {
+        try {
+            let convert = (options || {}).convert;
 
-      if (convert === undefined) convert = this.app.config.validate.convert;
+            if (convert === undefined) convert = this.app.config.validate.convert;
 
-      // 默认校验body
-      data = data || this.request.body;
+            // 默认校验body
+            data = data || this.request.body;
 
-      // 处理简写方式
-      simpleType(descriptor);
+            // 处理简写方式
+            simpleType(descriptor);
 
-      // 处理用户扩展规则
-      extendRules(this.app.validator.rules, descriptor);
+            // 处理用户扩展规则
+            extendRules(this.app.validator.rules, descriptor);
 
-      // 数据类型转换
-      convertObject(descriptor, data, convert);
+            // 数据类型转换
+            convertObject(descriptor, data, convert);
 
-      const validator = new Schema(descriptor);
+            // 处理提示信息
+            setMessage(descriptor);
 
-      await validator.validate(data);
+            console.log('descriptor======', descriptor);
 
-      // 校验成功之后，返回数据
-      return data;
-    } catch (error) {
-      // 标记校验的数据源
-      // ctx.headers ctx.params ctx.query ctx.request.body
-      if (data === this.headers) error.dataSource = 'headers';
-      if (data === this.params) error.dataSource = 'params';
-      if (data === this.query) error.dataSource = 'query';
-      if (data === this.request.body) error.dataSource = 'body';
+            const validator = new Schema(descriptor);
 
-      throw error;
-    }
-  },
+            await validator.validate(data);
+
+            // 校验成功之后，返回数据
+            return data;
+        } catch (error) {
+            // 标记校验的数据源
+            // ctx.headers ctx.params ctx.query ctx.request.body
+            if (data === this.headers) error.dataSource = 'headers';
+            if (data === this.params) error.dataSource = 'params';
+            if (data === this.query) error.dataSource = 'query';
+            if (data === this.request.body) error.dataSource = 'body';
+
+            throw error;
+        }
+    },
 };
