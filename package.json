@@ -1,9 +1,12 @@
 {
-  "name": "egg-validator-async",
-  "version": "2.0.19",
+  "name": "@zkboys/egg-validator-async",
+  "version": "1.0.0",
   "description": "validate plugin for egg",
   "eggPlugin": {
     "name": "validate"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "app",
