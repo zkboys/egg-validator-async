@@ -18,8 +18,13 @@ const toNumber = type => value => {
     return result;
 };
 
+const toString = value => {
+    if ([null, undefined].includes(value)) return value;
+    return String(value);
+};
+
 const CONVERT_MAP = {
-    string: String,
+    string: toString,
     number: toNumber('number'),
     boolean: value => {
         if (typeof value === 'boolean') return value;
